@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block title %} {{client.name}}{% endblock %}
+
+{% block content %}
+    <h1>All {{client.name}}'s orders</h1>
+    {% for order in orders %}
+        <h3>Order {{order.id}} with summ {{order.summa}}:</h3>
+        {% for product in order.products.all %}
+            <p>{{product.name}} {{product.price}} * {{product.amount}}</p>
+        {% endfor%}   
+    {% endfor%}
+{% endblock %}

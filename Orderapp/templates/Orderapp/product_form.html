@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %} Add a product {% endblock %}
+
+{% block content %}
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Upload</button>
+    </form>
+  
+    {% if saved_form %}
+        <h3>Product succesfully uploaded</h3> 
+    {% endif %}
+
+  {% endblock %}
