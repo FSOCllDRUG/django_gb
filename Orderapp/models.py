@@ -24,19 +24,18 @@ class ProductModel(models.Model):
         return f'Product {self.name} for {self.price}'
 
 
-def func():
-    products = ProductModel.objects.all()
-    summa = 0
-    for product in products:
-        summa += product.price * product.amount
-    return summa
-
-
 class OrderModel(models.Model):
     client = models.ForeignKey(ClientModel, on_delete=models.CASCADE)
     products = models.ManyToManyField(ProductModel, related_name='products')
-    summa = models.DecimalField(decimal_places=2, default=func(), max_digits=20)
+    summa = models.DecimalField(decimal_places=2, default=0, max_digits=20)
     order_date = models.DateField(auto_now_add=True)
 
+    def save(self, *args, **kwargs):
+        # Сначала сохраняем без вычисления суммы
+        super().save(*args, **kwargs)
+        # Затем вычисляем и обновляем сумму
+        self.summa = sum(product.price for product in self.products.all())
+        super().save(update_fields=['summa'])
+
     def __str__(self):
-        return f'{self.products}'
+        return f'Order {self.id} with {self.products.count()} products'
